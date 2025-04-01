@@ -9,7 +9,7 @@ library(tidyverse)
 ```
 
 ## Drink orders in some cafes in Auckland
-```{r}
+```{r data}
 logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTHiKwjLs8KixSKd4urABaRFwlwWwBJn9-3jQihVOYn4b45k-qvKAk0-Cy39RJ_LPho4g2ThHOtW9_j/pub?gid=1648384591&single=true&output=csv")
 
 ```
@@ -18,7 +18,7 @@ logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTHiKwj
 I have decided to capture the most amount of drinks in one order, as I think this would intriguing to see. Next I have produced the mean activity level of all cafes in the data set and described the numeric activity level in words.
 
 
-```{r}
+```{r summary functions}
 latest_data <-logged_data %>% 
 rename (drink_type = 2, number_drinks = 3, surburb_cafe = 4,
         levelofbusycafe = 5, timeoforder = 6) 
@@ -33,7 +33,7 @@ paste("The mean level of activity in a cafe is", round((sum(latest_data$levelofb
 The first plot displays the location of the cafes I frequented in recording this data. The second plot am captures the count of each type of drink that was ordered over the time period the data was collected.
 
 
-```{r}
+```{r bar plots}
 latest_data %>% 
   ggplot() + 
     geom_bar(aes(x = surburb_cafe, fill = surburb_cafe)) + 
