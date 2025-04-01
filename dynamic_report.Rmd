@@ -1,0 +1,53 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+library(tidyverse)
+```
+
+## Drink orders in some cafes in Auckland
+```{r}
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTHiKwjLs8KixSKd4urABaRFwlwWwBJn9-3jQihVOYn4b45k-qvKAk0-Cy39RJ_LPho4g2ThHOtW9_j/pub?gid=1648384591&single=true&output=csv")
+
+```
+
+### Two summary functions
+I have decided to capture the most amount of drinks in one order, as I think this would intriguing to see. Next I have produced the mean activity level of all cafes in the data set and described the numeric activity level in words.
+
+
+```{r}
+latest_data <-logged_data %>% 
+rename (drink_type = 2, number_drinks = 3, surburb_cafe = 4,
+        levelofbusycafe = 5, timeoforder = 6) 
+
+paste("The highest number of drinks ordered in one go is", max(latest_data$number_drinks))
+
+paste("The mean level of activity in a cafe is", round((sum(latest_data$levelofbusycafe))/21,2), 
+      ". This means that on average cafes were fairly busy with some seats filled", collapse = "")
+```
+
+### Two bar plots
+The first plot displays the location of the cafes I frequented in recording this data. The second plot am captures the count of each type of drink that was ordered over the time period the data was collected.
+
+
+```{r}
+latest_data %>% 
+  ggplot() + 
+    geom_bar(aes(x = surburb_cafe, fill = surburb_cafe)) + 
+  scale_fill_manual(values=c("#96b085", "#82b8c2", "#9d83a6", "#ee9e3d")) +
+  labs(title = "Auckland surburbs drinks were ordered from",
+       x = "Number of cafes", y = "Location of cafe")
+
+typedrink <- latest_data %>% separate_rows(drink_type, sep = ", ")
+typedrink %>% 
+  ggplot()+
+    geom_bar(aes(y = drink_type, fill = drink_type)) +
+  scale_fill_manual(values=c("#67390a", "#a47551", "#ffb365", "#fdacab", "#c8e397", "#e5cdae")) +
+  labs(title = "Types of drinks ordered",
+       subtitle = "In some Auckland cafes",
+       x = "Total number of drinks", y = "Type of drink") 
+```
+
